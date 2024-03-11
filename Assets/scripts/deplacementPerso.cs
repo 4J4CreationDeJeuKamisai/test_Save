@@ -9,9 +9,9 @@ public class deplacementPerso : MonoBehaviour
      -----------------*/
     private float vitesseDeplacement = 10f;
     private float vitesseRotation = 5f;
-    private float forceSaut = 5f;
+    private float forceSaut = 10f;
     bool toucheSol;
-    bool peutSauter = true;
+    private bool peutSauter;
 
     // Raccourcis GetComponent
     Rigidbody rb;
@@ -47,27 +47,26 @@ public class deplacementPerso : MonoBehaviour
          ----------*/
         RaycastHit infoCollision;
         // Cast des spheres vers bas perso + variable infoCollision prends valeurs
-        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, 0.5f, 0f), 0.2f, -Vector3.up, out infoCollision, 0.8f);
+        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, -6f, 0f), 1f, -transform.up, out infoCollision, 1f);
 
         // Si le jouer appuie sur espace la velocitee Y augmente et le personnage saute  
-        if (Input.GetKeyDown(KeyCode.Space) && toucheSol && peutSauter)
+        if (Input.GetKeyDown(KeyCode.Space) && toucheSol)
         {
             velociteY += forceSaut;
-            peutSauter = false;
-            // Demarrer la coroutine pour le delai entre les sauts
-            StartCoroutine(ActiveSaut());
         }
 
         // Les velocitees se font passer les valeurs des variables vDeplacement et velociteY
         rb.velocity = transform.forward * vDeplacement + new Vector3(0, velociteY, 0);
+
+        // pour voir si le joueur touche le sol
+        Debug.Log(toucheSol == true);
     }
-    /*-------------------
-     *** IENUMERATORS ***
-     --------------------*/
-    // Coroutine pour delai entre les sauts
-    IEnumerator ActiveSaut()
+
+    /* Pour debugger le spherecast 
+     ---------------------------------------------------------------------------*/
+    private void OnDrawGizmos()
     {
-        yield return new WaitForSeconds(0.5f);
-        peutSauter = true;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, -6f, 0f), 3f);
     }
 }
