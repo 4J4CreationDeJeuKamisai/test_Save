@@ -7,11 +7,9 @@ public class deplacementPerso : MonoBehaviour
     /*----------------
      *** VARIABLES ***
      -----------------*/
-    private float vitesseDeplacement = 10f;
-    private float vitesseRotation = 5f;
-    private float forceSaut = 10f;
-    bool toucheSol;
-    private bool peutSauter;
+    private float vitesseDeplacement = 15f; // Vitesse de déplacement du personnage
+    private float forceSaut = 15f; // Force du saut
+    bool toucheSol; // Booleen pour detecter si le perso touche le sol
 
     // Raccourcis GetComponent
     Rigidbody rb;
@@ -26,21 +24,33 @@ public class deplacementPerso : MonoBehaviour
         /*--------------
          ** MOUVEMENT **
          ---------------*/
+        var vDeplacement = Input.GetAxis("Horizontal") * vitesseDeplacement;
         // Deplacement vertical perso
-        var vDeplacement = Input.GetAxis("Vertical") * vitesseDeplacement;
-        // Deplacement horizontal perso
-        var vTourne = Input.GetAxis("Horizontal") * vitesseRotation;
+        var vMonte = Input.GetAxis("Vertical") * -vitesseDeplacement;
+        // Raccourci pour la velocite du saut
         float velociteY = rb.velocity.y;
 
-        // Rotation perso
-        var tourne = Input.GetAxis("Mouse X") * vitesseRotation;
-        transform.Rotate(0, tourne, 0);
-
-        // Controles pour faire tourner le perso avec les touches Horizontales (A et D)
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
+        // Controles pour faire avancer le perso sur l'axe des X avec les touches Horizontales (W et S)
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
         {
-            transform.Rotate(0, vTourne, 0);
+            transform.position = transform.position += new Vector3(vMonte * Time.deltaTime, 0, 0);
         }
+
+        /*--------------
+          ** ROTATION **
+         ---------------*/
+        // Rotation du personnage
+        if (Input.GetKey(KeyCode.A)) // Moving left
+        {
+            transform.rotation = Quaternion.Euler(180, 0, 0); // Face left
+            vDeplacement = Input.GetAxis("Horizontal") * -vitesseDeplacement;
+        }
+        else if (Input.GetKey(KeyCode.D)) // Moving right
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); // Face right
+            vDeplacement = Input.GetAxis("Horizontal") * vitesseDeplacement;
+        }
+
 
         /*---------
          ** SAUT **
@@ -66,6 +76,7 @@ public class deplacementPerso : MonoBehaviour
      ---------------------------------------------------------------------------*/
     private void OnDrawGizmos()
     {
+        // On dessine la sphère sous la capsule (perso), là où le sphereCast se fait
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position + new Vector3(0f, -6f, 0f), 3f);
     }
