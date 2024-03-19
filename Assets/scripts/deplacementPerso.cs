@@ -38,32 +38,53 @@ public class deplacementPerso : MonoBehaviour
             transform.position = transform.position += new Vector3(vMonte * Time.deltaTime, 0, 0);
         }
 
-        if (vDeplacement > 0)
+        /*---------------
+         ** Animations **
+        ----------------*/
+        // mouvement horizontal
+        switch (vDeplacement)
         {
-            animateur.SetBool("course", true);
-        }
-        else if (vDeplacement < 0)
-        {
-            animateur.SetBool("course2", true);
-        }
-        else
-        {
-            animateur.SetBool("course", false);
-            animateur.SetBool("course2", false);
+            case > 0:
+                animateur.SetBool("course", true);
+                animateur.SetBool("course2",false);
+                break;
+            case < 0:
+                animateur.SetBool("course2", true);
+                animateur.SetBool("course", false);
+                break;
+            case  0:
+                animateur.SetBool("course", false);
+                animateur.SetBool("course2", false);
+                break;
         }
 
-        /*--------------
-          ** ROTATION **
-         ---------------*/
-        // Rotation du personnage
-    //    if (Input.GetKey(KeyCode.A)) // Moving left
-    //    {
+        // Mouvement vertical
+        switch (vMonte)
+        {
+            case > 0:
+                animateur.SetBool("monte", true);
+                animateur.SetBool("descend", false);
+                break;
+            case < 0:
+                animateur.SetBool("descend", true);
+                animateur.SetBool("monte", false);
+                break;
+            case  0:
+                animateur.SetBool("descend", false);
+                animateur.SetBool("monte", false);
+                break;
+        }
 
-     //   }
-    //    else if (Input.GetKey(KeyCode.D)) // Moving right
-    //    {
-
-    //    }
+        // Saut
+        switch (toucheSol)
+        {
+            case false:
+                animateur.SetBool("saute", true);
+                break;
+            case true:
+                animateur.SetBool("saute", false);
+                break;
+        }
 
 
         /*---------
@@ -71,7 +92,7 @@ public class deplacementPerso : MonoBehaviour
          ----------*/
         RaycastHit infoCollision;
         // Cast des spheres vers bas perso + variable infoCollision prends valeurs
-        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, -3.5f, 0f), 2f, -transform.up, out infoCollision, 1f);
+        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, 1f, 0f), 1f, -transform.up, out infoCollision, 1f);
 
         // Si le jouer appuie sur espace la velocitee Y augmente et le personnage saute  
         if (Input.GetKeyDown(KeyCode.Space) && toucheSol)
@@ -83,8 +104,8 @@ public class deplacementPerso : MonoBehaviour
         rb.velocity = transform.forward * vDeplacement + new Vector3(0, velociteY, 0);
 
         // pour voir si le joueur touche le sol
-        //  Debug.Log(toucheSol == true);
-        Debug.Log(vDeplacement);
+        Debug.Log(toucheSol == true);
+      //Debug.Log(vDeplacement);
     }
 
     /* Pour debugger le spherecast 
@@ -93,6 +114,6 @@ public class deplacementPerso : MonoBehaviour
     {
         // On dessine la sphère sous la capsule (perso), là où le sphereCast se fait
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, -3.5f, 0f), 2f);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, 1f, 0f), 1f);
     }
 }

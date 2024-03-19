@@ -187,8 +187,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2774438}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1887495, y: -0.6814532, z: 0.18875165, w: 0.68144554}
-  m_LocalPosition: {x: 285.175, y: 8.144982, z: 306.70016}
+  m_LocalRotation: {x: 0.18874939, y: -0.6814526, z: 0.1887511, w: 0.6814464}
+  m_LocalPosition: {x: 285.175, y: 8.144978, z: 306.7001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -826,6 +826,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 51b415b4804708042af931563d252442, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2008301702}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 51b415b4804708042af931563d252442, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2008301707}
   m_SourcePrefab: {fileID: 100100000, guid: 51b415b4804708042af931563d252442, type: 3}
 --- !u!1 &766406237
 GameObject:
@@ -1061,8 +1064,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1887495, y: -0.6814532, z: 0.18875165, w: 0.68144554}
-  m_LocalPosition: {x: 285.175, y: 8.144982, z: 306.70016}
+  m_LocalRotation: {x: 0.18874939, y: -0.6814526, z: 0.1887511, w: 0.6814464}
+  m_LocalPosition: {x: 285.175, y: 8.144978, z: 306.7001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1331,7 +1334,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987165550}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 390eec4a5196baa4097ad408bcc74e4a, type: 3}
   m_Name: 
@@ -1542,7 +1545,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 987165559}
+      - m_Target: {fileID: 2008301707}
         m_TargetAssemblyTypeName: savePosition, Assembly-CSharp
         m_MethodName: Load
         m_Mode: 1
@@ -1812,7 +1815,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 987165559}
+      - m_Target: {fileID: 2008301707}
         m_TargetAssemblyTypeName: savePosition, Assembly-CSharp
         m_MethodName: Save
         m_Mode: 1
@@ -1910,8 +1913,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008301701}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 10
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1955,6 +1958,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 51b415b4804708042af931563d252442, type: 3}
   m_PrefabInstance: {fileID: 708968663}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2008301707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008301701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390eec4a5196baa4097ad408bcc74e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joueur: {fileID: 2008301701}
+  load: {fileID: 0}
+  positionX: 0
+  positionY: 0
+  positionZ: 0
+  rotationX: 0
+  rotationY: 0
+  rotationZ: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
