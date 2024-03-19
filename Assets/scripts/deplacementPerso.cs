@@ -13,10 +13,12 @@ public class deplacementPerso : MonoBehaviour
 
     // Raccourcis GetComponent
     Rigidbody rb;
+    Animator animateur;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //Rigidbody
+        animateur = GetComponent<Animator>();
     }
 
     void Update()
@@ -36,20 +38,32 @@ public class deplacementPerso : MonoBehaviour
             transform.position = transform.position += new Vector3(vMonte * Time.deltaTime, 0, 0);
         }
 
+        if (vDeplacement > 0)
+        {
+            animateur.SetBool("course", true);
+        }
+        else if (vDeplacement < 0)
+        {
+            animateur.SetBool("course2", true);
+        }
+        else
+        {
+            animateur.SetBool("course", false);
+            animateur.SetBool("course2", false);
+        }
+
         /*--------------
           ** ROTATION **
          ---------------*/
         // Rotation du personnage
-        if (Input.GetKey(KeyCode.A)) // Moving left
-        {
-            transform.rotation = Quaternion.Euler(180, 0, 0); // Face left
-            vDeplacement = Input.GetAxis("Horizontal") * -vitesseDeplacement;
-        }
-        else if (Input.GetKey(KeyCode.D)) // Moving right
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0); // Face right
-            vDeplacement = Input.GetAxis("Horizontal") * vitesseDeplacement;
-        }
+    //    if (Input.GetKey(KeyCode.A)) // Moving left
+    //    {
+
+     //   }
+    //    else if (Input.GetKey(KeyCode.D)) // Moving right
+    //    {
+
+    //    }
 
 
         /*---------
@@ -57,7 +71,7 @@ public class deplacementPerso : MonoBehaviour
          ----------*/
         RaycastHit infoCollision;
         // Cast des spheres vers bas perso + variable infoCollision prends valeurs
-        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, -6f, 0f), 1f, -transform.up, out infoCollision, 1f);
+        toucheSol = Physics.SphereCast(transform.position + new Vector3(0f, -3.5f, 0f), 2f, -transform.up, out infoCollision, 1f);
 
         // Si le jouer appuie sur espace la velocitee Y augmente et le personnage saute  
         if (Input.GetKeyDown(KeyCode.Space) && toucheSol)
@@ -69,7 +83,8 @@ public class deplacementPerso : MonoBehaviour
         rb.velocity = transform.forward * vDeplacement + new Vector3(0, velociteY, 0);
 
         // pour voir si le joueur touche le sol
-        Debug.Log(toucheSol == true);
+        //  Debug.Log(toucheSol == true);
+        Debug.Log(vDeplacement);
     }
 
     /* Pour debugger le spherecast 
@@ -78,6 +93,6 @@ public class deplacementPerso : MonoBehaviour
     {
         // On dessine la sphère sous la capsule (perso), là où le sphereCast se fait
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, -6f, 0f), 3f);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, -3.5f, 0f), 2f);
     }
 }
