@@ -5,15 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class changement_scene : MonoBehaviour
 {
+    [Header("Booléennes")]
     public bool tutorielTermine;
     public bool niveau1Termine;
     public bool niveau2Termine;
     public bool niveau3Termine;
     public bool niveau4Termine;
 
-
+    [Header("Gameobjects")]
     public GameObject notificationPasFini; //Vérifier s'il s'agit d'un gameobject qu'on active et désactive
 
+    // Fonction de trigger qui permet le chan
     public void OnTriggerEnter(Collider other)
     {
 
