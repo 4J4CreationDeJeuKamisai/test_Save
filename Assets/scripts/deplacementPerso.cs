@@ -18,7 +18,7 @@ public class deplacementPerso : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); //Rigidbody
-        animateur = GetComponent<Animator>();
+        animateur = GetComponent<Animator>(); // Animator
     }
 
     void Update()
@@ -26,6 +26,7 @@ public class deplacementPerso : MonoBehaviour
         /*--------------
          ** MOUVEMENT **
          ---------------*/
+        // Deplacement horizontal perso
         var vDeplacement = Input.GetAxis("Horizontal") * vitesseDeplacement;
         // Deplacement vertical perso
         var vMonte = Input.GetAxis("Vertical") * -vitesseDeplacement;
@@ -46,13 +47,13 @@ public class deplacementPerso : MonoBehaviour
         {
             case > 0:
                 animateur.SetBool("course", true);
-                animateur.SetBool("course2",false);
+                animateur.SetBool("course2", false);
                 break;
             case < 0:
                 animateur.SetBool("course2", true);
                 animateur.SetBool("course", false);
                 break;
-            case  0:
+            case 0:
                 animateur.SetBool("course", false);
                 animateur.SetBool("course2", false);
                 break;
@@ -69,11 +70,14 @@ public class deplacementPerso : MonoBehaviour
                 animateur.SetBool("descend", true);
                 animateur.SetBool("monte", false);
                 break;
-            case  0:
+            case 0:
                 animateur.SetBool("descend", false);
                 animateur.SetBool("monte", false);
                 break;
         }
+
+        // Appel de la fonction pour le déplacement diagonal du joueur
+        ControlesDiagonaux();
 
         // Saut
         switch (toucheSol)
@@ -104,16 +108,57 @@ public class deplacementPerso : MonoBehaviour
         rb.velocity = transform.forward * vDeplacement + new Vector3(0, velociteY, 0);
 
         // pour voir si le joueur touche le sol
-        Debug.Log(toucheSol == true);
-      //Debug.Log(vDeplacement);
+       // Debug.Log(toucheSol == true);
     }
 
-    /* Pour debugger le spherecast 
+    /* Pour voir le spherecast 
      ---------------------------------------------------------------------------*/
     private void OnDrawGizmos()
     {
         // On dessine la sphère sous la capsule (perso), là où le sphereCast se fait
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position + new Vector3(0f, 1f, 0f), 1f);
+    }
+
+    /*------------------------------
+     ** FONCTIONS SUPPLÉMENTAIRES **
+     ------------------------------*/
+    // Gestion du déplacement en diagonal du personnage
+    private void ControlesDiagonaux()
+    {
+        if (toucheSol)
+        {
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
+            {
+                animateur.SetBool("diagonaleHD", true);
+                animateur.SetBool("descend", false);
+                animateur.SetBool("course", false);
+            }
+            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
+            {
+                animateur.SetBool("diagonaleBD", true);
+                animateur.SetBool("monte", false);
+                animateur.SetBool("course", false);
+            }
+            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
+            {
+                animateur.SetBool("diagonaleBG", true);
+                animateur.SetBool("monte", false);
+                animateur.SetBool("course2", false);
+            }
+            else if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
+            {
+                animateur.SetBool("diagonaleHG", true);
+                animateur.SetBool("descend", false);
+                animateur.SetBool("course2", false);
+            }
+            else
+            {
+                animateur.SetBool("diagonaleHD", false);
+                animateur.SetBool("diagonaleBD", false);
+                animateur.SetBool("diagonaleBG", false);
+                animateur.SetBool("diagonaleHG", false);
+            }
+        }
     }
 }
