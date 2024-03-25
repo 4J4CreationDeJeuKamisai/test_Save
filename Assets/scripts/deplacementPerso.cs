@@ -10,6 +10,7 @@ public class deplacementPerso : MonoBehaviour
     private float vitesseDeplacement = 15f; // Vitesse de déplacement du personnage
     private float forceSaut = 15f; // Force du saut
     bool toucheSol; // Booleen pour detecter si le perso touche le sol
+    Vector3 dernierMouvement;
 
     // Raccourcis GetComponent
     Rigidbody rb;
@@ -28,56 +29,18 @@ public class deplacementPerso : MonoBehaviour
          ---------------*/
         // Deplacement horizontal perso
         var vDeplacement = Input.GetAxis("Horizontal") * vitesseDeplacement;
+
         // Deplacement vertical perso
-        var vMonte = Input.GetAxis("Vertical") * -vitesseDeplacement;
+        var vMonte = Input.GetAxis("Vertical") * vitesseDeplacement;
+
         // Raccourci pour la velocite du saut
         float velociteY = rb.velocity.y;
 
         // Controles pour faire avancer le perso sur l'axe des X avec les touches Horizontales (W et S)
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
         {
-            transform.position = transform.position += new Vector3(vMonte * Time.deltaTime, 0, 0);
+            transform.position = transform.position += new Vector3(-vMonte * Time.deltaTime, 0, 0);
         }
-
-        /*---------------
-         ** Animations **
-        ----------------*/
-        // mouvement horizontal
-        switch (vDeplacement)
-        {
-            case > 0:
-                animateur.SetBool("course", true);
-                animateur.SetBool("course2", false);
-                break;
-            case < 0:
-                animateur.SetBool("course2", true);
-                animateur.SetBool("course", false);
-                break;
-            case 0:
-                animateur.SetBool("course", false);
-                animateur.SetBool("course2", false);
-                break;
-        }
-
-        // Mouvement vertical
-        switch (vMonte)
-        {
-            case > 0:
-                animateur.SetBool("monte", true);
-                animateur.SetBool("descend", false);
-                break;
-            case < 0:
-                animateur.SetBool("descend", true);
-                animateur.SetBool("monte", false);
-                break;
-            case 0:
-                animateur.SetBool("descend", false);
-                animateur.SetBool("monte", false);
-                break;
-        }
-
-        // Appel de la fonction pour le déplacement diagonal du joueur
-        ControlesDiagonaux();
 
         // Saut
         switch (toucheSol)
@@ -90,6 +53,29 @@ public class deplacementPerso : MonoBehaviour
                 break;
         }
 
+        /*-------------
+         * ANIMATIONS *
+         -------------*/
+        // On regarde si les paramètres de l'animator sont égaux à 0...
+        if (animateur.GetFloat("VelocityX") == 0 && animateur.GetFloat("VelocityZ") == 0)
+        {
+            // Si oui, l'animation idle est true
+            animateur.SetBool("idle", true);
+        }
+        else
+        {
+            // Si non, l'animation idle est false
+            animateur.SetBool("idle", false);
+        }
+
+        // Association des paramètres de l'animator avec les directions de déplacement du personnage
+        animateur.SetFloat("VelocityX", vDeplacement);
+        animateur.SetFloat("VelocityZ", vMonte);
+
+        if (vDeplacement > 0 || vDeplacement < 0)
+        {
+            dernierMouvement = new Vector3(vDeplacement, 0f, vMonte).normalized;
+        }
 
         /*---------
          ** SAUT **
@@ -111,6 +97,22 @@ public class deplacementPerso : MonoBehaviour
        // Debug.Log(toucheSol == true);
     }
 
+    void LateUpdate()
+    {
+        if (rb.velocity.magnitude == 0)
+        {
+            float angle = Vector3.SignedAngle(Vector3.forward, dernierMouvement, Vector3.up);
+            if (angle < 0)
+            {
+                animateur.SetTrigger("idleGauche");
+            }
+            else
+            {
+                animateur.SetTrigger("idleDroite");
+            }
+        }
+    }
+
     /* Pour voir le spherecast 
      ---------------------------------------------------------------------------*/
     private void OnDrawGizmos()
@@ -118,47 +120,5 @@ public class deplacementPerso : MonoBehaviour
         // On dessine la sphère sous la capsule (perso), là où le sphereCast se fait
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position + new Vector3(0f, 1f, 0f), 1f);
-    }
-
-    /*------------------------------
-     ** FONCTIONS SUPPLÉMENTAIRES **
-     ------------------------------*/
-    // Gestion du déplacement en diagonal du personnage
-    private void ControlesDiagonaux()
-    {
-        if (toucheSol)
-        {
-            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
-            {
-                animateur.SetBool("diagonaleHD", true);
-                animateur.SetBool("descend", false);
-                animateur.SetBool("course", false);
-            }
-            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
-            {
-                animateur.SetBool("diagonaleBD", true);
-                animateur.SetBool("monte", false);
-                animateur.SetBool("course", false);
-            }
-            else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
-            {
-                animateur.SetBool("diagonaleBG", true);
-                animateur.SetBool("monte", false);
-                animateur.SetBool("course2", false);
-            }
-            else if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
-            {
-                animateur.SetBool("diagonaleHG", true);
-                animateur.SetBool("descend", false);
-                animateur.SetBool("course2", false);
-            }
-            else
-            {
-                animateur.SetBool("diagonaleHD", false);
-                animateur.SetBool("diagonaleBD", false);
-                animateur.SetBool("diagonaleBG", false);
-                animateur.SetBool("diagonaleHG", false);
-            }
-        }
     }
 }
