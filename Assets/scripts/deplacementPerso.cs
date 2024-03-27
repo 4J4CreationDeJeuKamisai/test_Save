@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class deplacementPerso : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class deplacementPerso : MonoBehaviour
     private float vitesseDeplacement = 15f; // Vitesse de déplacement du personnage
     private float forceSaut = 15f; // Force du saut
     bool toucheSol; // Booleen pour detecter si le perso touche le sol
-    Vector3 dernierMouvement;
+    Vector3 dernierMouvement; // Enregistrement du dernier mouvement du joueur
 
     // Raccourcis GetComponent
     Rigidbody rb;
@@ -72,6 +73,7 @@ public class deplacementPerso : MonoBehaviour
         animateur.SetFloat("VelocityX", vDeplacement);
         animateur.SetFloat("VelocityZ", vMonte);
 
+        // Si le joueur a tourné à gauche, le personnage va faire face à gauche et il fera de même pour la droite
         if (vDeplacement > 0 || vDeplacement < 0)
         {
             dernierMouvement = new Vector3(vDeplacement, 0f, vMonte).normalized;
@@ -94,13 +96,15 @@ public class deplacementPerso : MonoBehaviour
         rb.velocity = transform.forward * vDeplacement + new Vector3(0, velociteY, 0);
 
         // pour voir si le joueur touche le sol
-       // Debug.Log(toucheSol == true);
+        // Debug.Log(toucheSol == true);
     }
 
     void LateUpdate()
     {
+        // Si la velocite du rigidbody est égale à 0...
         if (rb.velocity.magnitude == 0)
         {
+            // On vérifie dans quel angle il se dirige et on active l'animation idle correspondante à son mouvement
             float angle = Vector3.SignedAngle(Vector3.forward, dernierMouvement, Vector3.up);
             if (angle < 0)
             {
